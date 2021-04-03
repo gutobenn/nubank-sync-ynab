@@ -183,4 +183,8 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt --use-deprecated=legacy-resolver
 COPY nubank_sync_ynab/ /src/nubank_sync_ynab
 
+RUN apk add --no-cache git
+RUN pip uninstall pynubank -y
+RUN pip install git+https://github.com/gutobenn/pynubank@pix_events
+
 ENTRYPOINT ["python", "nubank_sync_ynab/sync.py"]

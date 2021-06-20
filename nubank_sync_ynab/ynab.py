@@ -32,6 +32,12 @@ class YNAB:
             return account
 
     def get_payee(self, payee_name):
+        logging.info('Searching for a payee with rewrite rule "Is {}"'.format(payee_name))
+        for payee in self.client.budget.be_payee_rename_conditions:
+            if payee.operand == payee_name:
+                logging.info('Found payee with rewrite rule')
+                return payee.entities_payee
+
         logging.info('Searching for payee with name "{}"'.format(payee_name))
         try:
             return next(payee for payee in self.client.budget.be_payees if payee.name == payee_name)
@@ -61,7 +67,8 @@ class YNAB:
     def add_transaction(self, **kwargs):
         logging.info('Adding transaction')
         payee = self.get_payee(kwargs['payee'])
-        subcategory = self.get_subcategory(kwargs['subcategory'])
+        #subcategory = self.get_subcategory(kwargs['subcategory'])
+        subcategory = payee.auto_fill_subcategory if payee.auto_fill_subcategory_enabled else None
         account = self.get_account(kwargs['account'])
 
         if not self.has_matching_transaction(kwargs['id']):
@@ -73,6 +80,7 @@ class YNAB:
             transaction.entities_payee_id = payee.id
             transaction.entities_subcategory_id = subcategory.id if subcategory else None
             transaction.imported_date = datetime.datetime.now().date()
+            #transaction.import_id = str(datetime.datetime.now())
             transaction.source = "Imported"
             transaction.amount = kwargs['value']
             transaction.entities_account_id = account.id

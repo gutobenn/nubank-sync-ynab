@@ -24,6 +24,8 @@ def setup_logging(filename):
 YNAB_EMAIL = os.getenv('YNAB_EMAIL')
 YNAB_PASSWORD = os.getenv('YNAB_PASSWORD')
 YNAB_BUDGET = os.getenv('YNAB_BUDGET')
+NUBANK_CPF = os.getenv('NUBANK_CPF')
+NUBANK_PW = os.getenv('NUBANK_PW')
 NUBANK_TOKEN = os.getenv('NUBANK_TOKEN')
 NUBANK_CERT = os.getenv('NUBANK_CERT')
 NUBANK_CARD_ACCOUNT = os.getenv('NUBANK_CARD_ACCOUNT')
@@ -41,7 +43,8 @@ if __name__ == '__main__':
     setup_logging(log_config_file)
     ynab = YNAB(YNAB_EMAIL, YNAB_PASSWORD, YNAB_BUDGET)
     nu = Nubank()
-    nu.authenticate_with_refresh_token(NUBANK_TOKEN, './cert.p12')
+    #nu.authenticate_with_refresh_token(NUBANK_TOKEN, './cert.p12')
+    nu.authenticate_with_cert(NUBANK_CPF, NUBANK_PW, './cert.p12')
 
     transactions = filter_transactions(nu.get_card_statements(), STARTING_POINT)
 

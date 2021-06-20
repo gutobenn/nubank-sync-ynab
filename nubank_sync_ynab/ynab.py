@@ -75,7 +75,7 @@ class YNAB:
             logging.info('Creating transaction')
             transaction = Transaction()
             transaction.date = kwargs['date']
-            transaction.memo = 'AUTO IMPORT - {}'.format(kwargs['id'])
+            transaction.memo = '[{}]'.format(kwargs['id'])
             transaction.imported_payee = payee.name
             transaction.entities_payee_id = payee.id
             transaction.entities_subcategory_id = subcategory.id if subcategory else None

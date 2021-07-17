@@ -36,7 +36,12 @@ class YNAB:
         for payee in self.client.budget.be_payee_rename_conditions:
             if payee.operand == payee_name:
                 logging.info('Found payee with rewrite rule')
-                return payee.entities_payee
+                logging.info('Checking if it\'s in payee list')
+                for payee2 in self.client.budget.be_payees:
+                    if payee2.id == payee.entities_payee_id:
+                        logging.info('It is!')
+                        return payee.entities_payee
+                logging.info('It is not.')
 
         logging.info('Searching for payee with name "{}"'.format(payee_name))
         try:
